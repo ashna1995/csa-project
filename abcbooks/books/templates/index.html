@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .book {
+            position: relative;
+            width: 500px;
+            height: 600px;
+            perspective: 1000px;
+        }
+
+        .binding, .page, .previous-page {
+            height: 100%;
+        }
+
+        .binding {
+            position: absolute;
+            width: 20px;
+            background: #465d5e;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            border-radius: 10px 0 0 10px;
+            z-index: 3;
+        }
+
+        .page, .previous-page {
+            position: absolute;
+            width: calc(100% - 20px);
+            background: white;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            backface-visibility: hidden;
+            transform-origin: left;
+            border-radius: 0 10px 10px 0;
+            left: 20px;
+            overflow: hidden;
+        }
+
+        .previous-page {
+            background: linear-gradient(135deg, #f6f6f6, #ffffff);
+            transform: rotateY(0deg);
+            z-index: 2;
+            animation: turnPage 3s forwards ease-out;
+        }
+
+        .page {
+            background: white;
+            transform: rotateY(-180deg);
+            animation: revealPage 2s forwards ease-out;
+            border-left: 2px solid #ccc;
+            box-shadow: none;
+        }
+
+        .lines {
+            position: absolute;
+            width: calc(100% - 40px);
+            height: 100%;
+            top: 0;
+            left: 20px;
+            background: repeating-linear-gradient(
+                white,
+                white 22px,
+                #eee 22px,
+                #eee 23px
+            );
+            z-index: 0;
+        }
+
+        .date {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 1em;
+            color: #999;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            text-align: left;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            margin-left: 10px;
+            margin-right:10px;
+        }
+
+        .button, .add-book {
+            background-color: #fed6e3;
+            color: #333;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 1em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        .button:hover, .add-book:hover {
+            background-color: #a8edea;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .messages {
+            width: 100%;
+            margin: 10px auto;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        li {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        li strong {
+            font-size: 1.2em;
+        }
+
+        li span {
+            font-size: 0.9em;
+        }
+
+        li .book-info {
+            flex-grow: 1;
+        }
+
+        li .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        li a {
+             background-color: #fed6e3;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        li a:hover {
+            background-color: #a8edea;
+            color: #fff;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes turnPage {
+            from {
+                transform: rotateY(0deg);
+            }
+            to {
+                transform: rotateY(-180deg);
+            }
+        }
+
+        @keyframes revealPage {
+            from {
+                transform: rotateY(-180deg);
+            }
+            to {
+                transform: rotateY(0deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="book">
+        <div class="binding"></div>
+        <div class="previous-page">
+            <div class="lines"></div>
+            <div class="content">
+                <h1>Your favorite book collection</h1>
+
+            </div>
+        </div>
+        <div class="page">
+            <div class="lines"></div>
+            <div class="date">Date: 2024-07-18</div>
+            <div class="content">
+                <h1>Books Collection</h1>
+                <div class="buttons">
+                    <a href="{% url 'landing_page' %}" class="button">Home</a>
+                    <a class="add-book" href="{% url 'add_book' %}">Add Book</a>
+                </div>
+                {% for message in messages %}
+                    <div class="messages {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+                <ul>
+                    {% for book in books %}
+                        <li>
+                            <div class="book-info">
+                                <span><strong>{{ book.Title }}</strong> by {{ book.Authors }}</span><br>
+                                <span>Publisher: {{ book.Publisher }}</span><br>
+                                <span>Year: {{ book.Year }}</span><br>
+                                <span>ISBN: {{ book.ISBN }}</span>
+                            </div>
+                            <div class="actions">
+                                <a href="{% url 'edit_book' book.ISBN %}">Edit</a>
+                                <a href="{% url 'delete_book' book.ISBN %}">Delete</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

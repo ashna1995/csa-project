@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - ABCBooks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+        <style>
+        /* Copy the styles from your landing page and add/modify as needed */
+        body {
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .book {
+            position: relative;
+            width: 500px;
+            height: 600px;
+            perspective: 1000px;
+        }
+        /* ... (include other styles from landing page) ... */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 80%;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #fed6e3;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #a8edea;
+        }
+    </style>
+</head>
+<body>
+    <div class="book">
+        <div class="binding"></div>
+        <div class="cover">
+            <h1>Sign In to ABCBooks</h1>
+        </div>
+        <div class="page">
+            <div class="lines"></div>
+            <div class="content">
+                <h1>Welcome back</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit">Sign In</button>
+                </form>
+                <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

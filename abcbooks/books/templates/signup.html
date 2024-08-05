@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - ABCBooks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+         body {
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .book {
+            position: relative;
+            width: 500px;
+            height: 600px;
+            perspective: 1000px;
+        }
+        /* ... (include other styles from landing page) ... */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 80%;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #fed6e3;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #a8edea;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 20px;
+            transform: translateX(-50%);
+            padding: 20px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            text-align: center;
+            color: white;
+            z-index: 1000;
+        }
+        .popup.success {
+            background-color: #4CAF50;
+        }
+        .popup.error {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div id="popup" class="popup"></div>
+
+   <div class="book">
+        <div class="binding"></div>
+        <div class="cover">
+            <h1>Sign Up for ABCBooks</h1>
+        </div>
+        <div class="page">
+            <div class="content">
+                <h1>Create your account</h1>
+                <form method="post" id="signupForm">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                    <div id="passwordError" class="error"></div>
+                    <button type="submit">Sign Up</button>
+                </form>
+                <div class="requirements">
+                    <p>Password requirements:</p>
+                    <ul>
+                        <li>Minimum length: 8 characters</li>
+                        <li>Contains at least 1 number</li>
+                        <li>Contains at least 1 special character</li>
+                        <li>Contains at least 1 uppercase letter</li>
+                        <li>Contains at least 1 lowercase letter</li>
+                    </ul>
+                </div>
+                <p>Already have an account? <a href="{% url 'signin' %}">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPopup(message, isSuccess) {
+            var popup = document.getElementById('popup');
+            popup.textContent = message;
+            popup.className = 'popup ' + (isSuccess ? 'success' : 'error');
+            popup.style.display = 'block';
+            setTimeout(function() {
+                popup.style.display = 'none';
+            }, 3000);
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            var password = document.getElementById('password').value;
+            var errorElement = document.getElementById('passwordError');
+            var errors = [];
+
+            if (password.length < 8) {
+                errors.push("Password must be at least 8 characters long.");
+            }
+            if (!/\d/.test(password)) {
+                errors.push("Password must contain at least one number.");
+            }
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                errors.push("Password must contain at least one special character.");
+            }
+            if (!/[A-Z]/.test(password)) {
+                errors.push("Password must contain at least one uppercase letter.");
+            }
+            if (!/[a-z]/.test(password)) {
+                errors.push("Password must contain at least one lowercase letter.");
+            }
+
+            if (errors.length > 0) {
+                event.preventDefault();
+                errorElement.innerHTML = errors.join("<br>");
+                showPopup("Signup failed. Please check the errors below.", false);
+            } else {
+                errorElement.innerHTML = "";
+                // We'll let the form submit, but we'll show a success message after the response
+                showPopup("Signup successful! Redirecting to signin page...", true);
+            }
+        });
+
+        // Check if there's a message in the URL (from Django's messages framework)
+        window.onload = function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var message = urlParams.get('message');
+            var messageType = urlParams.get('message_type');
+            if (message) {
+                showPopup(decodeURIComponent(message), messageType === 'success');
+            }
+        };
+    </script>
+</body>
+</html>

@@ -38,8 +38,6 @@
             top: 0;
             border-radius: 10px 0 0 10px;
             z-index: 2;
-
-
         }
 
         .cover, .page {
@@ -47,7 +45,6 @@
             width: calc(100% - 20px);
             background: linear-gradient(135deg, #6b8b8e, #faadc3);
             color: #333;
-
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
             backface-visibility: hidden;
@@ -68,7 +65,7 @@
             background: white;
             color: #333;
             transform: rotateY(-180deg);
-            animation: openPage 2s forwards ease-out ;
+            animation: openPage 2s forwards ease-out;
             border-left: 2px solid #ccc;
             box-shadow: none;
             overflow: hidden;
@@ -162,11 +159,16 @@
         <div class="page">
             <div class="lines"></div>
             <div class="date">Date: 2024-07-18</div>
-            <div class="content">
-                <h1>Your favorite book collection</h1>
-                <p>Browse and manage your book collection easily.</p>
-                <a href="{% url 'index' %}" class="button">View Books</a>
-            </div>
+           <div class="content">
+               <h1>Your favorite book collection</h1>
+               <p>Browse and manage your book collection easily.</p>
+               {% if user.is_authenticated %}
+                   <a href="{% url 'index' %}" class="button">View Books</a>
+               {% else %}
+                   <a href="{% url 'signin' %}" class="button">Sign In</a>
+                   <a href="{% url 'signup' %}" class="button">Sign Up</a>
+               {% endif %}
+           </div>
         </div>
     </div>
 </body>

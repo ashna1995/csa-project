@@ -244,6 +244,11 @@
             <div class="date">Date: {% now "Y-m-d" %}</div>
             <div class="content">
                 <h1>Books Collection</h1>
+                <!-- Add this near the top of your index.html content -->
+<div style="text-align: right; padding: 10px;">
+    <a href="{% url 'signout' %}" class="button">Sign Out</a>
+</div>
+
                 <div class="buttons">
                     <a href="{% url 'landing_page' %}" class="button">Home</a>
                     <a class="add-book" href="{% url 'add_book' %}">Add Book</a>

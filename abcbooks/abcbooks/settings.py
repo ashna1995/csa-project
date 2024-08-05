@@ -37,8 +37,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cognito_jwt',
     'books',
 ]
+
+# Cognito settings
+COGNITO_AWS_REGION = 'us-east-1'
+COGNITO_USER_POOL = 'us-east-1_G8lQ3Y8GC'
+COGNITO_APP_CLIENT_ID = '5sv024bmilb3d67rbk92ni0oe5'
+
+# Authentication backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'books.cognito_backend.CognitoBackend',
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,8 +62,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+LOGIN_URL = 'signin'
 ROOT_URLCONF = 'abcbooks.urls'
+
 
 TEMPLATES = [
     {

@@ -14,8 +14,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
             color: #333;
         }
 
@@ -96,6 +95,9 @@
             position: relative;
             z-index: 1;
             text-align: left;
+            padding: 20px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
         }
 
         .content h1 {
@@ -110,8 +112,6 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
-            margin-left: 10px;
-            margin-right:10px;
         }
 
         .button, .add-book {
@@ -145,8 +145,6 @@
             list-style-type: none;
             padding: 0;
             margin: 0;
-            max-height: 400px;
-            overflow-y: auto;
         }
 
         li {
@@ -179,7 +177,7 @@
         }
 
         li a {
-             background-color: #fed6e3;
+            background-color: #fed6e3;
             color: #333;
             padding: 5px 10px;
             border-radius: 5px;
@@ -239,35 +237,43 @@
             <div class="lines"></div>
             <div class="content">
                 <h1>Your favorite book collection</h1>
-
             </div>
         </div>
         <div class="page">
             <div class="lines"></div>
-            <div class="date">Date: 2024-07-18</div>
+            <div class="date">Date: {% now "Y-m-d" %}</div>
             <div class="content">
                 <h1>Books Collection</h1>
                 <div class="buttons">
                     <a href="{% url 'landing_page' %}" class="button">Home</a>
                     <a class="add-book" href="{% url 'add_book' %}">Add Book</a>
                 </div>
-                {% for message in messages %}
-                    <div class="messages {{ message.tags }}">{{ message }}</div>
-                {% endfor %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="messages {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
                 <ul>
                     {% for book in books %}
                         <li>
                             <div class="book-info">
-                                <span><strong>{{ book.Title }}</strong> by {{ book.Authors }}</span><br>
-                                <span>Publisher: {{ book.Publisher }}</span><br>
-                                <span>Year: {{ book.Year }}</span><br>
-                                <span>ISBN: {{ book.ISBN }}</span>
+                                <span><strong>{{ book.Title|default:"Unknown Title" }}</strong> by {{ book.Authors|default:"Unknown Author" }}</span><br>
+                                <span>Publisher: {{ book.Publisher|default:"Unknown Publisher" }}</span><br>
+                                <span>Year: {{ book.Year|default:"Unknown Year" }}</span><br>
+                                <span>ISBN: {{ book.ISBN|default:"No ISBN" }}</span>
                             </div>
                             <div class="actions">
-                                <a href="{% url 'edit_book' book.ISBN %}">Edit</a>
-                                <a href="{% url 'delete_book' book.ISBN %}">Delete</a>
+                                {% if book.ISBN %}
+                                    <a href="{% url 'edit_book' book.ISBN %}">Edit</a>
+                                    <a href="{% url 'delete_book' book.ISBN %}">Delete</a>
+                                {% else %}
+                                    <span>Edit (No ISBN)</span>
+                                    <span>Delete (No ISBN)</span>
+                                {% endif %}
                             </div>
                         </li>
+                    {% empty %}
+                        <li>No books found.</li>
                     {% endfor %}
                 </ul>
             </div>

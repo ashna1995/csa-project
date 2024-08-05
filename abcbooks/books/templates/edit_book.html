@@ -200,21 +200,28 @@
             <div class="date">Date: 2024-07-24</div>
             <div class="content">
                 <h1>Edit Book</h1>
-                <a href="{% url 'landing_page' %}" class="home-button">Home</a>
-                <form action="{% url 'edit_book' book.ISBN %}" method="post">
-                    {% csrf_token %}
-                    <label for="isbn">ISBN:</label>
-                    <input type="text" name="isbn" id="isbn" value="{{ book.ISBN }}" required>
-                    <label for="title">Title:</label>
-                    <input type="text" name="title" id="title" value="{{ book.Title }}" required>
-                    <label for="author">Author:</label>
-                    <input type="text" name="author" id="author" value="{{ book.Authors }}" required>
-                    <label for="publisher">Publisher:</label>
-                    <input type="text" name="publisher" id="publisher" value="{{ book.Publisher }}" required>
-                    <label for="year">Year:</label>
-                    <input type="text" name="year" id="year" value="{{ book.Year }}" required>
-                    <button type="submit">Update Book</button>
-                </form>
+                <a href="{% url 'index' %}" class="home-button">Home</a>
+                {% if book and book.ISBN %}
+<form action="{% url 'edit_book' book.ISBN %}" method="post">
+    {% csrf_token %}
+    <label for="isbn">ISBN:</label>
+    <input type="text" name="isbn" id="isbn" value="{{ book.ISBN }}" readonly>
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" value="{{ book.Title|default:'' }}" required>
+    <label for="author">Author:</label>
+    <input type="text" name="author" id="author" value="{{ book.Authors|default:'' }}" required>
+    <label for="publisher">Publisher:</label>
+    <input type="text" name="publisher" id="publisher" value="{{ book.Publisher|default:'' }}" required>
+    <label for="year">Year:</label>
+    <input type="text" name="year" id="year" value="{{ book.Year|default:'' }}" required>
+    <button type="submit">Update Book</button>
+</form>
+{% else %}
+<p>Error: Book data not available.</p>
+{% endif %}
+
+
+
             </div>
         </div>
     </div>

@@ -114,7 +114,7 @@ def authenticated_request(request, method, url, json=None):
         'Authorization': f'Bearer {token}'
     }
 
-    response = requests.request(method, url, headers=headers, json=json)
+    response = requests.request(method, url, headers=headers, json=json, timeout=60)
     return response
 
 
